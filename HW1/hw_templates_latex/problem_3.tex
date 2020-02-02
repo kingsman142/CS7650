@@ -1,0 +1,36 @@
+You are investigating articles from the New York Times and from Buzzfeed.
+Some of the articles contain \emph{fake} news, while others contain \emph{real} news (assume that there are only two types of news). \\
+ \emph{Note}: for the following questions, write your answer using up to 3 significant figures.
+ 
+ \begin{enumerate}
+     \item Fake news only accounts for 5\% of all articles in all newspapers.
+     However, it is known that 30\% of all fake news comes from Buzzfeed.
+     In addition, Buzzfeed generates 25\% of all news articles.
+     What is the probability that a randomly chosen Buzzfeed article is fake news? 
+     [3 pts]
+     \item Suppose that 15\% of all fake news comes from the New York Times (NYT).
+     Furthermore, suppose that 60\% of all real news comes from the NYT. 
+     Under all assumptions so far, what is the probability that a randomly chosen NYT article is fake news? 
+     [3 pts]
+     \item Mike is an active reader of the New York Times: Mike reads 80\% of all NYT articles.
+    However, he also has a suspicion that the NYT is a bad publisher, and he believes that 25\% of all NYT articles are fake news.
+    Furthermore, the NYT generates 30\% of all news articles.
+    Under all assumptions so far, what is the probability that a randomly chosen article (from all newspapers) will be from the NYT, will be read by Mike and will be \emph{believed} to be fake news?
+    [4 pts]
+     
+     
+ \end{enumerate}
+ 
+ \begin{solution} \ \\
+a) $P(\text{fake} | \text{Buzzfeed}) = \frac{P(\text{Buzzfeed} | \text{fake})P(\text{fake})}{P(\text{Buzzfeed})} = \frac{0.3\cdot 0.05}{0.25} = 0.06$
+
+There is a 6\% chance the news article is fake news.\\
+
+b) $P(\text{fake} | \text{NYT}) = \frac{P(\text{NYT} | \text{fake})P(\text{fake})}{P(\text{NYT})} = \frac{P(\text{NYT} | \text{fake})P(\text{fake})}{P(\text{NYT} | \text{fake})P(\text{fake}) + P(\text{NYT} | \text{real})P(\text{real})} = \frac{0.15 \cdot 0.05}{0.15\cdot 0.05 + 0.6\cdot 0.95} = \frac{0.0075}{0.5775} = 0.013$
+
+There is a 1.3\% chance the news article is fake news.\\
+
+c) $P(\text{NYT}, \text{read}, \text{believed}) = P(\text{NYT})P(\text{read} | \text{NYT})P(\text{believed} | \text{NYT}) = 0.3\cdot 0.8\cdot 0.25 = 0.06$
+
+There is a 6\% chance the article is produced by the NYT, read by Mike, and believed to be fake news.
+\end{solution}

@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{accents}
+\usepackage{url}
+\usepackage[colorlinks]{hyperref}
+\usepackage{changepage}
+\usepackage{booktabs}
+\usepackage[none]{hyphenat}
+\pagestyle{fancy}
+\setlength{\headheight}{40pt}
+
+
+\newenvironment{solution}
+  {\renewcommand\qedsymbol{$\blacksquare$}
+  \begin{proof}[Solution]}
+  {\end{proof}}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+
+\begin{document}
+
+\lhead{Homework 2: Text classification \\ \textbf{Deadline: Feb 3rd, 3:00pm} }
+\rhead{CS 4650/7650 \\ Natural Language Understanding} 
+\cfoot{\thepage\ of \pageref{LastPage}}
+
+\textbf{Instructions}
+\begin{enumerate}
+
+    \item This homework has two parts: Q1, Q2 and Q3 are theory questions and Q4 is a programming assignment with some parts requiring a written answer. Each part needs to be submitted as follows:
+    
+    • Submit the answers to the theory questions as a pdf file on Canvas for the assignment corresponding to Homework 2 Theory. This should consist answers to Q1, Q2, Q3 and the descriptive answers from Q4. Name the pdf file as- \texttt{LastName\_FirstName.pdf}.  We recommend students type answers with LaTeX or word processors for this part. A scanned handwritten copy would also be accepted, try to be clear as much as possible. No credit may be given to unreadable handwriting. 
+    
+    • The programming assignment requires you to work on boilerplate code. Submit the answers to the programming assignment in a zip that contain all the code files. This submission is to be made on Canvas for the assignment corresponding to Homework 2 Programming. Name the zip file as- \texttt{LastName\_FirstName.zip}.
+
+    \item For the theory questions, write out all steps required to find the solutions so that partial credit may be awarded.
+    \item The second question is meant for graduate students only. Undergraduate students do not need to attempt Q2. Each of the other three questions is mandatory for all students. There is no extra credit for answering additional questions than what is required.
+    \item We generally encourage collaboration with other students. You may discuss the questions and potential directions for solving them with another student. However, you need to write your own solutions and code separately, and not as a group activity. Please list the students you collaborated with.
+    \item The code files needed to complete the homework are included in a zip file on Canvas.
+\end{enumerate}
+
+\pagebreak
+
+ \begin{enumerate}
+   \item \input{problem_1}
+   \item \input{problem_2}
+   \item \input{problem_3}
+   \item \input{problem_4}
+ \end{enumerate}
+
+\end{document}

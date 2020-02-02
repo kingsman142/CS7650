@@ -1,0 +1,62 @@
+Language Modeling is the technique that allows us to compute the probabilities of word sequences. The probability of a sequence $\textbf{W} = w_1^{n} = \{w_1, w_2 ... w_n\}$, with the use of chain rule, can be estimated as the product of probabilities of each word given the history, as shown-
+\begin{align*}
+    P(\textbf{W}) &= P(w_1, w_2 ... w_n)\\
+    &= P(w_1) \; P(w_2 | w_1) \; P(w_3 | w_1, w_2) ... P(w_n | w_1, w_2 ... w_{n-1})\\
+    &= \prod_{i=1}^{n} P(w_i | w_1^{i-1}) 
+\end{align*}
+
+\begin{enumerate}
+    \item Using an n-gram model allows us to approximate the above probability using only a subset of of $n - 1$ words from the history at each step. Simplify the above expression for the general n-gram case, and the bi-gram case. [3 pts]
+    \item A common way to have markers for the start and the end of sentence is to add the [BOS] (beginning of sentence) and [EOS] (end of sentence) tokens at the start and end of every sentence. Consider the following text snippet-
+    \begin{adjustwidth}{50pt}{50pt}
+    [BOS] i made cheese at home [EOS] \newline
+    [BOS] i like home made cheese [EOS] \newline
+    [BOS] cheese made at home is tasty [EOS] \newline
+    [BOS] i like cheese that is salty [EOS] 
+    \end{adjustwidth}
+    Using the expression derived in (a), find the probability of the following sequence as per the bi-gram model- $P(\text{[BOS] I like cheese made at home [EOS]})$. [5 pts]
+    \item In practice, instead of raw probability, perplexity is used as the metric for evaluating a language model. Define perplexity and find the value of perplexity for the sequence in (b) for the bi-gram case. [2 pts]
+    \item One way to deal with unseen word arrangements in the test set is to use Laplace smoothing, which adds 1 to all bi-gram counts, before we normalize them into probabilities. An alternative to Laplace smoothing (add-1 smoothing) is add-k smoothing, where k is a fraction that allows assigning a lesser probability mass to unseen word arrangements. Find the probability of the sequence in (b) with add-k smoothing for $k=0.1$. [5 pts]
+    \item To deal with unseen words in the test set, a common way is to fix a vocabulary by thresholding on the frequency of words, and assigning an [UNK] token to represent all out-of-vocabulary words. In the example from (a), use a threshold of $count > 1$ to fix the vocabulary. Find the probability for the following sequence for an add-0.1 smoothed bi-gram model- $P(\text{[BOS] i like pepperjack cheese [EOS]})$. [5 pts]
+\end{enumerate}
+
+\begin{solution} \ \\
+	a) n-gram case:
+	
+	$P(\textbf{W}) = \prod_{i=1}^{N} P(w_i | w_{i-n}^{i-1})$\\
+	
+	bi-gram case:
+	
+	$P(\textbf{W}) = \prod_{i=1}^{N} P(w_i | w_{i-1})$\\
+	
+	b) $\scriptsize P(S) = P(\text{I} \vert \text{[BOS]}) P(\text{like} \vert \text{I})P(\text{cheese} \vert \text{like}) P(\text{made} \vert \text{cheese}) P(\text{at} \vert \text{made}) P(\text{home} \vert \text{at}) P(\text{[EOS]} \vert \text{home})$\\
+	$= 0.75 \cdot 0.67 \cdot 0.5 \cdot 0.25 \cdot 0.33 \cdot 1 \cdot 0.33\\
+	= 0.0068$
+	
+	c) Perplexity is the inverse probability of a test sentence, which is then normalized by the sentence's length. The normalization is used to control for the nature of long sentences, where many more probabilities are multiplied together than a short sentence (so, the model would be biased toward shorter sentences without the normalization). The equation is as follows:
+	
+	$\text{PP}(S) = \sqrt[N]{\frac{1}{P(S)}} = \sqrt[N]{\frac{1}{P(w_1, w_2, \dots, w_n)}}\\
+	= \sqrt[N]{\prod_{i=1}^{N}\frac{1}{P(w_i \vert w_{i-1})}} \qquad$ (for the bi-gram case)
+	
+	From the above equation, it is easy to see why low perplexity is good and high perplexity is bad (we are using $\frac{1}{P(w_i \vert w_{i-1})}$ instead of $P(w_i \vert w_{i-1})$ directly). For the sentence given in part (b), the perplexity is as follows for the bi-gram model:
+	
+	$\text{PP}(S) = \sqrt[N]{\frac{1}{P(\text{I} \vert \text{[BOS]})}\frac{1}{P(\text{like} \vert \text{I})}\frac{1}{P(\text{cheese} \vert \text{like})}\frac{1}{P(\text{made} \vert \text{cheese})}\frac{1}{P(\text{at} \vert \text{made})}\frac{1}{P(\text{home} \vert \text{at})}\frac{1}{P(\text{[EOS]} \vert \text{home})}}\\$
+	$= \sqrt[8]{\frac{1}{P(\text{I} \vert \text{[BOS]}) P(\text{like} \vert \text{I})P(\text{cheese} \vert \text{like}) P(\text{made} \vert \text{cheese}) P(\text{at} \vert \text{made}) P(\text{home} \vert \text{at}) P(\text{[EOS]} \vert \text{home})}}\\
+	= \sqrt[8]{\frac{1}{0.0068}}\\
+	= \sqrt[8]{147.0588}\\
+	= 1.866$\\
+
+d) $\scriptsize P(S) = (P(\text{I} \vert \text{[BOS]})+k) (P(\text{like} \vert \text{I})+k) (P(\text{cheese} \vert \text{like})+k) (P(\text{made} \vert \text{cheese})+k) (P(\text{at} \vert \text{made})+k) (P(\text{home} \vert \text{at})+k) (P(\text{[EOS]} \vert \text{home})+k)\\
+= (P(\text{[BOS]})+0.1) (P(\text{I} \vert \text{[BOS]})+0.1) (P(\text{like} \vert \text{I})+0.1) (P(\text{cheese} \vert \text{like})+0.1) (P(\text{made} \vert \text{cheese})+0.1) (P(\text{at} \vert \text{made})+0.1) (P(\text{home} \vert \text{at})+0.1) (P(\text{[EOS]} \vert \text{home})+0.1)\\
+= (0.75 + 0.1) \cdot (0.67 + 0.1) \cdot (0.5 + 0.1) \cdot (0.25 + 0.1) \cdot (0.33 + 0.1) \cdot (1 + 0.1) \cdot (0.33 + 0.1)\\
+= 0.85 \cdot 0.77 \cdot 0.6 \cdot 0.35 \cdot 0.43 \cdot 1.1 \cdot 0.43\\
+= 0.0280$\\
+
+e) Using the examples from (b), we can construct a training set of vocabulary. As such, all the words with count $>$ 1 are ``[BOS]'', ``[EOS]'', ``i'', ``made'', ``cheese'', ``at'', ``home'', ``like'', and ``is''. All other tokens should be considered out-of-vocabulary ([UNK]). As such, the sentence provided to us, ``[BOS] i like pepperjack cheese [EOS]'', is transformed into ``[BOS] i like [UNK] cheese [EOS]''. Therefore, to calculate $P($[BOS] i like [UNK] cheese [EOS]$)$ with add-0.1 smoothing in a bi-gram model, we can combine what we have learned from previous parts of this question to create the following formula:
+
+$\scriptsize P(S) \\
+= (P(\text{I} \vert \text{[BOS]})+0.1) (P(\text{like} \vert \text{I})+0.1) (P(\text{[UNK]} \vert \text{like})+0.1) (P(\text{cheese} \vert \text{[UNK]})+0.1) (P(\text{[EOS]} \vert \text{cheese})+0.1)\\
+= (0.75 + 0.1)(0.67 + 0.1)(0 + 0.1)(0 + 0.1)(0.25 + 0.1)\\
+= 0.85 \cdot 0.77 \cdot 0.1 \cdot 0.1 \cdot 0.35\\
+= 0.0023$
+\end{solution}

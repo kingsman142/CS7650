@@ -1,0 +1,81 @@
+A collection of reviews about comedy movies (data $\mathcal{D}$) contains the following keywords and binary labels for whether each movie was funny (+) or not funny (-). 
+The data are shown below: for example, the cell at the intersection of ``Review 1'' and ``laugh'' indicates that the text of Review 1 contains 2 tokens of the word ``laugh.''
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{l | r r r r r r | l} \toprule
+Review & laugh & hilarious & awesome & dull & yawn & bland & Y \\ \hline
+1      & 2     & 1         & 1       & 1    & 1    & 0     & 1 \\
+2      & 0     & 1         & 2       & 0    & 0    & 0     & 1 \\
+3      & 3     & 0         & 0       & 0    & 0    & 1     & 1 \\
+4      & 0     & 1         & 0       & 2    & 1    & 0     & 0 \\
+5      & 1     & 1         & 1       & 2    & 0    & 2     & 0 \\
+6      & 1     & 0         & 0       & 2    & 2    & 0     & 0 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+You may find it easier to complete this problem if you copy the data into a spreadsheet and use formulas for calculations, rather than doing calculations by hand. 
+Please report all scores as \textbf{log-probabilities}, with 3 significant figures. [10 pts]\\
+
+\begin{enumerate}
+\item Assume that you have trained a Naive Bayes model on data $\mathcal{D}$ to detect funny vs. not funny movie reviews. 
+Compute the model's predicted score for funny and not-funny to the following sentence $S$ (i.e. $P(+ | S)$ and $P(- | S)$), and determine which label the model will apply to $S$. [4 pts] \\ 
+$S$: ``This film was hilarious! I didn't yawn once. Not a single bland moment. Every minute was a laugh.''
+\item The counts in the original data are sparse and may lead to overfitting, e.g. a strong prior on assigning the ``not funny'' label to reviews that contain ``yawn.''
+What would happen if you applied \emph{smoothing}?
+Apply add-1 smoothing and recompute the Naive Bayes model's predicted scores for $S$.
+Did the label change?
+[4 pts]
+\item What is an additional feature that you could extract from text to improve the classification of sentences like $S$, and how would it help improve the classification?
+[2 pt]
+\end{enumerate}
+
+\begin{solution} \ \\
+	\textbf{NOTE:} All logarithms computed in this question use base e\\
+	
+	a) In the provided sentence, given the bag of words in the table, we can gather sentence S has the following vector representation: [1, 1, 0, 0, 1, 1]. This represents S has 1 laugh token, 1 hilarious token, 1 yawn token, and 1 bland token, with 0 awesome and dull tokens. The following probabilities of each token in each class can be represented with the following equation: $P(\text{w} \vert \text{class}) = \frac{\text{count(w, class)}}{\sum_{w\in V} \text{count(w, class)}}$. The probabilities of each token in each class can be seen below:\\\\
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabular}{l | r r r r r r | l} \toprule
+			Class & laugh & hilarious & awesome & dull & yawn & bland \\ \hline
+			1      & 0.385 & 0.154 & 0.231 & 0.077 & 0.077 & 0.077 \\
+			0      & 0.125 & 0.125 & 0.063 & 0.375 & 0.188 & 0.125 \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	Now, with the independence assumption of Naive Bayes, we can calculate $P(\text{class} \vert \text{S}) = \frac{P(\text{S} \vert \text{class})P(\text{class})}{P(S)} = P(\text{S} \vert \text{class})P(\text{class}) = P(\text{S} \vert \text{class})$. We can remove the $P(S)$ because it's the same value for both classes. Additionally, we can remove the $P(\text{class})$ for the same reason. Including either probability would be pointless when it comes to classification. So, when we go to calculate the probability of the sentence belonging to each class, we can calculate the log probability $\log\prod_{w\in V}P(\text{S} \vert \text{class})I(w \in S) = \sum_{w\in V}\log(P(\text{S} \vert \text{class})I(w \in S))$. As such, we can now calculate the scores for each class as follows:
+	
+	$P(\text{S} \vert \text{+}) = \log(P(\text{laugh} \vert \text{+})I(w \in S)) + \log(P(\text{hilarious} \vert \text{+})I(w \in S)) + \log(P(\text{awesome} \vert \text{+})I(w \in S)) + \log(P(\text{dull} \vert \text{+})I(w \in S)) + \log(P(\text{yawn} \vert \text{+})I(w \in S)) + \log(P(\text{bland} \vert \text{+})I(w \in S)) = \log(P(\text{laugh} \vert \text{+})\cdot 1) + \log(P(\text{hilarious} \vert \text{+})\cdot 1) + \log(P(\text{awesome} \vert \text{+})\cdot 0) + \log(P(\text{dull} \vert \text{+})\cdot 0) + \log(P(\text{yawn} \vert \text{+})\cdot 1) + \log(P(\text{bland} \vert \text{+})\cdot 1) = -0.95551 - 1.8718 - 2.56495 - 2.56495 = -7.95721$
+	
+	$P(\text{S} \vert \text{-}) = \log(P(\text{laugh} \vert \text{-})I(w \in S)) + \log(P(\text{hilarious} \vert \text{-})I(w \in S)) + \log(P(\text{awesome} \vert \text{-})I(w \in S)) + \log(P(\text{dull} \vert \text{-})I(w \in S)) + \log(P(\text{yawn} \vert \text{-})I(w \in S)) + \log(P(\text{bland} \vert \text{-})I(w \in S)) = \log(P(\text{laugh} \vert \text{-})\cdot 1) + \log(P(\text{hilarious} \vert \text{-})\cdot 1) + \log(P(\text{awesome} \vert \text{-})\cdot 0) + \log(P(\text{dull} \vert \text{-})\cdot 0) + \log(P(\text{yawn} \vert \text{-})\cdot 1) + \log(P(\text{bland} \vert \text{-})\cdot 1) = -2.07944 - 2.07944 - 1.67398 - 2.07944 = -7.9123$
+	
+	We can see $P(\text{S} \vert \text{-}) > P(\text{S} \vert \text{+})$, so we assign the label of not funny to this sentence.\\
+	
+	b) After applying add-1 smoothing, the probabilities of each word for each class has changed to the following:
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabular}{l | r r r r r r | l} \toprule
+			Class & laugh & hilarious & awesome & dull & yawn & bland \\ \hline
+			1      & 0.316 & 0.158 & 0.211 & 0.105 & 0.105 & 0.105 \\
+			0      & 0.136 & 0.136 & 0.091 & 0.318 & 0.182 & 0.136 \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	Also, the scores (log probabilities) for each class has changed to the following:
+	
+	$P(\text{S} \vert \text{+}) = -1.15268 - 1.84583 - 2.25129 - 2.25129 = -7.50109$
+	
+	$P(\text{S} \vert \text{-}) = -1.99243 - 1.99243 - 1.70475 - 1.99243 = -7.68204$
+	
+	So, now we see $P(\text{S} \vert \text{+}) > P(\text{S} \vert \text{-})$, therefore we label this sentence as funny. So, yes, with add-1 smoothing, the label did change.
+	
+	c) The most important to add to this algorithm, in my opinion, is the bigram feature. Currently, we use ``yawn'' and ``bland'' independently, as well as ``didn't'' and ``yawn'' independently. However, with a bigram feature, those words would be clumped together into ``(single, bland)'' or ``(didn't, yawn)'', which provide more context than naively only paying attention to the word ``yawn''. As such, this feature, as well as higher Markov orders (e.g. trigrams) would improve accuracy by taking into account the neighbor words of each word, providing more context for classification later in the process.
+	
+	Another fun feature (that I thought I would mention) I would extract from the text is its sentiment analysis. This has an immediate and obvious effect on classifying the sentences. For example, if a sentence has a generally negative sentiment, there should be less chance of the review being funny; negativity and funny are somewhat opposites, most of the time. Meanwhile, if somebody found the comedy movie funny, they most likely wrote a review with a positive sentiment. As such, this feature has clear advantages to improving classification of sentences like S.
+	
+\end{solution}

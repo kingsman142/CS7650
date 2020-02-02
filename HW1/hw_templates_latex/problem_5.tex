@@ -1,0 +1,39 @@
+\textbf{[Graduate Students Only]} A 2-D Gaussian distribution is defined as:
+\begin{align*}
+    G(x,y) = \left.
+    \frac{1}{2\pi \sigma ^ 2} \exp{\left(-\frac{x^2 + y^2}{2 \sigma^2}\right)}
+   \right.
+\end{align*}
+
+Compute the following integral:
+\begin{align*}
+    \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} G(x, y)\; (5x^2 y^2 + 3xy + 1)\;dx\;dy
+\end{align*}
+
+\emph{Hint}: Think in terms of the properties of probability distribution functions. [5 pts]
+
+\begin{solution} \ \\
+$\int_{-\infty}^\infty \int_{-\infty}^\infty \frac{1}{2\pi\sigma^2}\exp(-\frac{x^2+y^2}{2\sigma^2})(5x^2y^2+3xy+1) dx dy\\
+= \int_{-\infty}^\infty \int_{-\infty}^\infty \frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{x^2}{2\sigma^2})\frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{y^2}{2\sigma^2})(5x^2y^2+3xy+1) dx dy\\
+= \int_{-\infty}^\infty \frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{y^2}{2\sigma^2}) \int_{-\infty}^\infty \frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{x^2}{2\sigma^2})(5x^2y^2+3xy+1) dx dy$
+
+Let $G(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{x^2}{2\sigma^2})$ and $G(y) = \frac{1}{\sigma\sqrt{2\pi}}\exp(-\frac{y^2}{2\sigma^2})$ represent the marginal distributions of $X$ and $Y$ respectively, with both being Gaussians:
+
+$= \int_{-\infty}^\infty G(y) \int_{-\infty}^\infty G(x)(5x^2y^2+3xy+1) dx dy\\
+= \int_{-\infty}^\infty G(y) \big[\int_{-\infty}^\infty G(x)5x^2y^2 dx + \int_{-\infty}^\infty G(x)3xy dx + \int_{-\infty}^\infty G(x) dx\big] dy\\
+= \int_{-\infty}^\infty G(y) \big[5y^2\int_{-\infty}^\infty x^2G(x) dx + 3y\int_{-\infty}^\infty xG(x) dx + \int_{-\infty}^\infty G(x) dx\big] dy$
+
+Now, $\mu = E[X] = \int_{-\infty}^\infty xf(x)dx$ and $\sigma^2 = E[(X - \mu)^2] = \int_{-\infty}^\infty (x-\mu)^2f(x)dx$ by definition of the mean ($\mu$) and variance ($\sigma^2$). Additionally, the mean of both Gaussians $G(x)$ and $G(y)$ are 0 by simple comparison of them and the univariate Gaussian equation.
+
+$= \int_{-\infty}^\infty G(y) \big[5y^2\sigma^2 + 3y\int_{-\infty}^\infty xG(x) dx + \int_{-\infty}^\infty G(x) dx\big] dy \qquad$(definition of variance)$\\
+= \int_{-\infty}^\infty G(y) \big[5y^2\sigma^2 + 3y\mu + \int_{-\infty}^\infty G(x) dx\big] dy \qquad\qquad\qquad\qquad$(definition of mean)$\\
+= \int_{-\infty}^\infty G(y) \big[5y^2\sigma^2 + 3y\mu + 1\big] dy\\
+= \int_{-\infty}^\infty G(y)5y^2\sigma^2 dy + \int_{-\infty}^\infty G(y)3y\mu dy + \int_{-\infty}^\infty G(y) dy\\
+= 5\sigma^2\int_{-\infty}^\infty y^2G(y) dy + 3\mu\int_{-\infty}^\infty yG(y) dy + \int_{-\infty}^\infty G(y) dy\\
+= 5\sigma^4 + 3\mu\int_{-\infty}^\infty yG(y) dy + \int_{-\infty}^\infty G(y) dy \qquad\qquad\qquad$(definition of variance)$\\
+= 5\sigma^4 + 3\mu^2 + \int_{-\infty}^\infty G(y) dy \qquad\qquad\qquad$(definition of mean)$\\
+= 5\sigma^4 + 3\mu^2 + 1\\
+= 5\sigma^4 + 1 \qquad\qquad\qquad$($\mu = 0$ as discussed previously)\\
+
+So, the value of the integral is $5\sigma^4 + 1$.
+\end{solution}

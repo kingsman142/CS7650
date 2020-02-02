@@ -1,0 +1,43 @@
+\textbf{[CS 7650 Only]} 
+
+Assume that you are training several logistic regression models.
+After training on the same data, $\hat{\theta}$ is the optimal weight for an unregularized logistic regression model and $\theta^{*}$ is the optimal weight for a logistic regression model with L2 regularization.
+Prove that $||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$. \\
+\emph{Note}: you may find it useful to look at the likelihood equations for regularized and unregularized logistic regression.
+[5 pts]
+
+\begin{solution} \ \\
+	For logistic regression, we will use gradient descent to optimize the loss function, which is the negative log likelihood equation, $L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y'))$. The weight update rule is as follows: $\theta_{t+1} = \theta_{t} - \eta_t\nabla_\theta L$.
+	
+	As such, we can derive the following for unregularized logistic regression:
+	
+	$L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y')) \\
+	\implies \nabla_\theta L = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))}$\\
+	
+	And for L2 regularization:
+	
+	$L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y')) + \lambda\lvert\lvert\theta\rvert\rvert_2^2 \\
+	\implies \nabla_\theta L = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))} + 2\lambda\theta$\\
+	
+	Now, the update rules, respectively, for unregularized logistic regression and L2 regularization logistic regression are below:
+	
+	$\theta_{t+1}^{\text{unreg}} = \theta_{t} - \eta_t\nabla_\theta L\\
+	= \theta_t - \eta_t (-f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))})$
+	
+	$\theta_{t+1}^{\text{L2}} = \theta_{t} - \eta_t\nabla_\theta L\\
+	= \theta_t - \eta_t (-f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))} + 2\lambda\theta)$\\
+	
+	Let $L_{d\theta} = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))}$. So, this leads to:
+	
+	$\theta_{t+1}^{\text{unreg}} = \theta_{t} - \eta_t\nabla_\theta L\\
+	= \theta_t - \eta_t (L_{d\theta})\\
+	= \theta_t - \eta_t L_{d\theta}$
+	
+	$\theta_{t+1}^{\text{L2}} = \theta_{t} - \eta_t\nabla_\theta L\\
+	= \theta_t - \eta_t (L_{d\theta} + 2\lambda\theta)\\
+	= \theta_t - \eta_t L_{d\theta} - 2\eta_t\lambda\theta$\\
+	
+	From the above equations, the difference between unregularized and L2-regularized logistic regression is in the weight update rule. Instead of just subtracting the gradient of the loss function in the weight update rule, logistic regression with L2 regularization also subtracts $2\eta\lambda\theta$. For the sake of simplicity, ignore the $\eta_tL_{d\theta}$ term for the moment, so the update rule becomes $\theta_{t+1}^{\text{L2}} = \theta_t - 2\eta_t\lambda\theta$. If $\theta > 0$, then $2\eta_t\lambda\theta$ becomes a negative value subtracted from the weights, making the weights closer to 0. On the other side, if $\theta < 0$, then $2\eta_t\lambda\theta$ is a positive value added onto the weights, making them closer to 0. This property does not exist in the unregularized logistic regression update rule. As such, since the L2-regularization weights move closer to 0, while the unregularized weights do not, their norm is going to be smaller ($||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$).
+	
+	$\therefore ||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$
+\end{solution}

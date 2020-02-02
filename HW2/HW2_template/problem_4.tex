@@ -1,0 +1,157 @@
+In this problem, you will do text classifications for Hate Speech. You need both answer the questions and submit your codes. 
+
+Hate speech is a 
+\begin{enumerate}
+    \item \textbf{deliberate attack,}
+    \item \textbf{directed towards a specific group of people, }
+    \item \textbf{motivated by aspects of the group’s identity.}
+\end{enumerate}
+The three premises must be true for a sentence to
+be categorized as HATE. Here are two examples:
+\begin{enumerate}
+    \item ``Poor white kids being forced to treat apes
+and parasites as their equals."
+  \item ``Islam is a false religion however unlike
+some other false religions it is crude and
+appeals to crude people such as arabs."
+\end{enumerate}
+In (a), the speaker uses “apes” and “parasites” to
+refer to children of dark skin and implies they are
+not equal to “white kids”. That is, it is an attack to
+the group composed of children of dark skin based
+on an identifying characteristic, namely, their skin
+colour. Thus, all the premises are true and (a) is
+a valid example of HATE. Example (b) brands all
+people of Arab origin as crude. That is, it attacks
+the group composed of Arab people based on their
+origin. Thus, all the premises are true and (b) is a
+valid example of HATE. 
+
+This problem will require programming in \textbf{Python 3}. The goal is to build a \textbf{Naive Bayes model} and a \textbf{logistic
+regression model} that you learnt from the class on a real-world hate speech classification dataset. Finally, you
+will explore how to design better features and improve the accuracy of your models for this task.
+
+The dataset you will be using is collected from Twitter online. Each example is labeled as 1 (hatespeech) or 0 (Non-hatespeech).
+To get started, you should first download the data and starter code from \url{https://www.cc.gatech.edu/classes/AY2020/cs7650_spring/programming/h2_text_classification.zip}. Try to run:
+
+\texttt{python main.py -- model AlwaysPredictZero}
+
+This will load the data and run a default classifier \texttt{AlwaysPredictZero} which always predicts label 0 (non-hatespeech). You should be able to see the reported train accuracy = 0.4997. That says, always predicting non-hatespeech isn’t that good. Let’s try to build better classifiers!
+
+Note that you need to implement models without using any machine learning packages such as \texttt{sklearn}. We will only provide train set, and we will evaluate your code based on our test set. 
+
+To have a quick check with your implementations, you can randomly split the dataset we give you into train and test set at a ration 8:2, compare the accuracy between the models you have implemented and related models in \texttt{sklearn} packages. You would expect an accuracy at around 0.65 (or above) on your test set. 
+
+\begin{enumerate}
+
+\item  \textbf{(Naive Bayes)} In this part, you should implement a Naive Bayes model with add-1 smoothing, as we
+taught in the class. You are required to implement the \texttt{NaiveBayesClassifier} class in \texttt{classifiers.py}. You would probably want to take a look at the \texttt{UnigramFeature} class in \texttt{utils.py} that we have implemented for you already. After you finish your codes, run \texttt{python main.py --model NaiveBayes} to check the performance. List the 10 words that, under your model, have the higest ratio of $\frac{P (w|1)}
+{P (w|0)}$ (the most
+distinctly hatespeech words). List the 10 words with the lowest ratio. What trends do you see? [25 pts]
+
+
+\item \textbf{(Logistic Regression)} In this part, you should implement a Logistic Regression model. You are required to implement the \texttt{LogisticRegressionClassifier} class in \texttt{classifiers.py}. First, implement a logistic regression model without regularization and run \texttt{python main.py --model LogisticRegression}, compare the performance with your Naive Bayes approach. Next, we would like to experiment with L2 regularization, add L2 regularization with different weight such as $\alpha = \{0.0001, 0.001, 0.01, 0.1, 1, 10\}$, describe what you observed. (You may want to split the train set we give you into your own train and test set to observe the performance) [25 pts]
+
+\item \textbf{(Features)} In the last part, you’ll explore and implement a more sophisicated set of features. You need
+to implement the class \texttt{BigramFeature} or modify the class \texttt{CustomFeature} in\texttt{utils.py}. Here are some common strategies (you are
+welcome to implement some of them but try to come up with more!):
+\begin{enumerate}
+    \item Remove stopwords (e.g. a, the, in),
+    \item Use a mixture of unigrams, bigrams or trigrams,
+    \item Use TF-IDF (refer to \url{http://www.tfidf.com/}) features.
+\end{enumerate}
+
+Use your creativity for this problem and try to obtain an accuracy as high as possible on your test
+set! After you implement \texttt{CustomFeature} , run:
+
+\texttt{python main.py --model NaiveBayes -- feature customized}
+
+\texttt{python main.py --model LogisticRegression -- feature customized}
+
+Describe the features that you have implemented. We’ll evaluate your two models on the test set. [Bonus: 10 points]
+
+You will receive up to 10 bonus points: up to 5 points based on
+the novel features you try and the rest based on how well your models perform compared to other submissions:
+$$
+Bonus = 5 + 5 * \frac{1}{rank}
+$$
+e.g. if you rank first in the class, you will receive the full bonus point! We will share the winners' codes as well.
+
+\end{enumerate}
+
+\begin{solution} \ \\
+a) The most distinct hate speech words that were discovered are:
+\begin{enumerate}
+	\item non
+	\item asian
+	\item ape
+	\item mud
+	\item liberal
+	\item dumb
+	\item filth
+	\item kill
+	\item non-white
+	\item aids
+\end{enumerate}
+Clearly, there are some slurs here (e.g. ape), as well as racial characteristics which are common occurrences in hate speech (e.g. asian, non-white, mud), violent verbs and adjectives (e.g. filth, kill, dumb), stereotypical traits (e.g. AIDs for blacks), and political attacks (e.g. liberal because the model might have found most hate groups are non-liberal). Finally, I believe ``non'' is in there because hate groups are associated with attacking people outside of their group, so they are ``non-white'', ``non-American'', or other characteristics.
+
+On the other side, the least distinct hate speech words are as follows:
+\begin{enumerate}
+	\item thanks
+	\item sf
+	\item html
+	\item sports
+	\item information
+	\item irishcentral
+	\item spirit
+	\item email
+	\item report
+	\item facebook
+\end{enumerate}
+Please note I left out tokens such as ``15'', ``['', and ``]'' because those are not words. In this list, we clearly observe ``thanks'' is the most distinct non-hate speech word, which makes sense because it is associated with being a caring person. Additionally, there are more neutral or happy words, such as ``spirit'', ``sports'', and ``email''. I am unsure whether ``sf'' is associated with a specific acronym, or if it is short for San Francisco. If it stands for San Francisco, that makes sense because it is a typically left-leaning political area, which contrasts with the list we found above that included ``liberal'' as a hate speech word.\\
+
+b) \textbf{NOTE: All simulations were done with an 80/20 train/test split.}
+
+Naive Bayes (unigram, add-1 smoothing): 76.34\%
+
+Logistic Regression (no regularization, $\eta = 0.01$, 200 epochs): 68.82\%
+
+Logistic Regression (regularization w/ $\alpha = 0.0001$, $\eta = 0.05$, 100 epochs): 71.51\%
+
+Logistic Regression (regularization w/ $\alpha = 0.001$, $\eta = 0.02$, 100 epochs): 72.58\%
+
+Logistic Regression (regularization w/ $\alpha = 0.01$, $\eta = 0.005$, 160 epochs): 69.35\%
+
+Logistic Regression (regularization w/ $\alpha = 0.1$, $\eta = 0.0005$, 100 epochs): 66.13\%
+
+Logistic Regression (regularization w/ $\alpha = 1$, $\eta = 0.0005$, 100 epochs): 63.17\%
+
+Logistic Regression (regularization w/ $\alpha = 10$, $\eta = 0.00005$, 50 epochs): 58.87\%
+
+From the above results, we can conclude two things. One, we see the logistic regression classifier performs worse than the Naive Bayes with unigram modeling and add-1 smoothing (76.34\% vs. 68.82\% accuracy). 
+
+Second, logistic regression with a moderate amount of regularization increases performance by a decent amount. We can see with the lowest amount of regularization ($\alpha = 0.0001$), the performance increased about 3\%, but with a little bit more regularization ($\alpha = 0.001$), the performance increases a bit more until extra regularization begins to decrease the accuracy. With a large amount of regularization, the regularization term in the loss overpowers the actual log likelihood loss (based on the error of predicted values vs. ground-truth values), leading to the loss function basically prioritizing the weights being close to 0, leading to a massive drop in performance. As such, what we can conclude is a little bit of regularization can help, but a lot of regularization can hurt a lot.
+
+c) \textbf{NOTE: All simulations were done with an 80/20 train/test split.}
+
+(Naive Bayes) Replacing words in bottom 90\% of counts (count $\leq$ 7) with ``UNK'': 68.55\%
+
+(Naive Bayes) Replacing words in bottom 75\% of counts (count $\leq$ 3) with ``UNK'': 73.39\%
+
+(Naive Bayes) Replacing words in bottom 60\% of counts (count $\leq$ 2) with ``UNK'': 74.19\%
+
+(Naive Bayes) Replacing words in bottom 25\% of counts (count $\leq$ 1) with ``UNK'': 75.81\%
+
+(Naive Bayes) Bigram model: 70.16\%
+
+(Naive Bayes) TF-IDF: 48.66\%
+
+(Naive Bayes) Removing NLTK stopwords: 74.46\%
+
+(Naive Bayes) Unigrams + trigrams model: 73.12\%
+
+As seen from above, none of these models or custom features can beat the Naive Bayes unigram model with add-1 smoothing. All of these implementations are left in utils.py to ensure the TA's can see I actually implemented them. I did not perform any simulations with the logistic regression model because the best regularized model ($\alpha = 0.001$) performed 4\% worse than the unigram NB model with add-1 smoothing. As such, with the above features, since none of them increased accuracy on the NB model, I believe there is reasonable doubt a logistic regression with this features would fail to surpass the 76.34\% accuracy benchmark set by the NB model discussed above. I truly did try to be creative with all the features possible. I tried to replace infrequent words (infrequent defined by the percentile of their frequency) with the ``UNK'' token, with varying percentile numbers, to remove what I deem useless or unimportant words, but that did not work. Then, I tried the vanilla bigram model, and that failed to work as well. I implemented TF-IDF to weight the counts of each word in the unigram model, but that failed as well. Then, I did the naive approach of removing all the stopwords in NLTK, but that decreased accuracy by about 2\%. Furthermore, if you look at the `preprocess\_word' function in my CustomFeature class, you will see I tried experimenting with a custom stopword list (I went with this approach because the NLTK stopword list is a bit aggressive, and I felt like it removed too many words), based primarily around gender pronouns, but that failed even more than the NLTK stopwords, so I omitted that accuracy from my results above. Then, finally, I decided to combine the unigram and trigrams features, since unigrams are more prone to introducing high variance into the model, while bigrams are more prone to high bias, but that produced a worse accuracy as well.
+
+I genuinely tried to be creative, but as you can see from the above, none of the features I implemented actually improved accuracy. The current implementation of my CustomFeature class is for the unigram + bigram model. Therefore, in the competition across students to determine who has the best accuracy, since my unigram NB model performed the best out of all my models, please use my unigram Naive Bayes model: ``main.py --model NaiveBayes --feature unigram''. Thanks.
+
+\end{solution}
