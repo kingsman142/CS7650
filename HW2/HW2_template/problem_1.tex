@@ -48,9 +48,9 @@ Did the label change?
 	
 	Now, with the independence assumption of Naive Bayes, we can calculate $P(\text{class} \vert \text{S}) = \frac{P(\text{S} \vert \text{class})P(\text{class})}{P(S)} = P(\text{S} \vert \text{class})P(\text{class}) = P(\text{S} \vert \text{class})$. We can remove the $P(S)$ because it's the same value for both classes. Additionally, we can remove the $P(\text{class})$ for the same reason. Including either probability would be pointless when it comes to classification. So, when we go to calculate the probability of the sentence belonging to each class, we can calculate the log probability $\log\prod_{w\in V}P(\text{S} \vert \text{class})I(w \in S) = \sum_{w\in V}\log(P(\text{S} \vert \text{class})I(w \in S))$. As such, we can now calculate the scores for each class as follows:
 	
-	$P(\text{S} \vert \text{+}) = \log(P(\text{laugh} \vert \text{+})I(w \in S)) + \log(P(\text{hilarious} \vert \text{+})I(w \in S)) + \log(P(\text{awesome} \vert \text{+})I(w \in S)) + \log(P(\text{dull} \vert \text{+})I(w \in S)) + \log(P(\text{yawn} \vert \text{+})I(w \in S)) + \log(P(\text{bland} \vert \text{+})I(w \in S)) = \log(P(\text{laugh} \vert \text{+})\cdot 1) + \log(P(\text{hilarious} \vert \text{+})\cdot 1) + \log(P(\text{awesome} \vert \text{+})\cdot 0) + \log(P(\text{dull} \vert \text{+})\cdot 0) + \log(P(\text{yawn} \vert \text{+})\cdot 1) + \log(P(\text{bland} \vert \text{+})\cdot 1) = -0.95551 - 1.8718 - 2.56495 - 2.56495 = -7.95721$
+	$P(\text{S} \vert \text{+}) =  \log P(+) + \log(P(\text{laugh} \vert \text{+})I(w \in S)) + \log(P(\text{hilarious} \vert \text{+})I(w \in S)) + \log(P(\text{awesome} \vert \text{+})I(w \in S)) + \log(P(\text{dull} \vert \text{+})I(w \in S)) + \log(P(\text{yawn} \vert \text{+})I(w \in S)) + \log(P(\text{bland} \vert \text{+})I(w \in S)) = \log P(0.5) + \log(P(\text{laugh} \vert \text{+})\cdot 1) + \log(P(\text{hilarious} \vert \text{+})\cdot 1) + \log(P(\text{awesome} \vert \text{+})\cdot 0) + \log(P(\text{dull} \vert \text{+})\cdot 0) + \log(P(\text{yawn} \vert \text{+})\cdot 1) + \log(P(\text{bland} \vert \text{+})\cdot 1) = -0.6931 - 0.95551 - 1.8718 - 2.56495 - 2.56495 = -8.65031$
 	
-	$P(\text{S} \vert \text{-}) = \log(P(\text{laugh} \vert \text{-})I(w \in S)) + \log(P(\text{hilarious} \vert \text{-})I(w \in S)) + \log(P(\text{awesome} \vert \text{-})I(w \in S)) + \log(P(\text{dull} \vert \text{-})I(w \in S)) + \log(P(\text{yawn} \vert \text{-})I(w \in S)) + \log(P(\text{bland} \vert \text{-})I(w \in S)) = \log(P(\text{laugh} \vert \text{-})\cdot 1) + \log(P(\text{hilarious} \vert \text{-})\cdot 1) + \log(P(\text{awesome} \vert \text{-})\cdot 0) + \log(P(\text{dull} \vert \text{-})\cdot 0) + \log(P(\text{yawn} \vert \text{-})\cdot 1) + \log(P(\text{bland} \vert \text{-})\cdot 1) = -2.07944 - 2.07944 - 1.67398 - 2.07944 = -7.9123$
+	$P(\text{S} \vert \text{-}) = \log P(-) + \log(P(\text{laugh} \vert \text{-})I(w \in S)) + \log(P(\text{hilarious} \vert \text{-})I(w \in S)) + \log(P(\text{awesome} \vert \text{-})I(w \in S)) + \log(P(\text{dull} \vert \text{-})I(w \in S)) + \log(P(\text{yawn} \vert \text{-})I(w \in S)) + \log(P(\text{bland} \vert \text{-})I(w \in S)) = \log P(0.5) + \log(P(\text{laugh} \vert \text{-})\cdot 1) + \log(P(\text{hilarious} \vert \text{-})\cdot 1) + \log(P(\text{awesome} \vert \text{-})\cdot 0) + \log(P(\text{dull} \vert \text{-})\cdot 0) + \log(P(\text{yawn} \vert \text{-})\cdot 1) + \log(P(\text{bland} \vert \text{-})\cdot 1) = -0.6931 - 2.07944 - 2.07944 - 1.67398 - 2.07944 = -8.6054$
 	
 	We can see $P(\text{S} \vert \text{-}) > P(\text{S} \vert \text{+})$, so we assign the label of not funny to this sentence.\\
 	
@@ -68,9 +68,9 @@ Did the label change?
 	
 	Also, the scores (log probabilities) for each class has changed to the following:
 	
-	$P(\text{S} \vert \text{+}) = -1.15268 - 1.84583 - 2.25129 - 2.25129 = -7.50109$
+	$P(\text{S} \vert \text{+}) = -0.6931 - 1.15268 - 1.84583 - 2.25129 - 2.25129 = -8.1942$
 	
-	$P(\text{S} \vert \text{-}) = -1.99243 - 1.99243 - 1.70475 - 1.99243 = -7.68204$
+	$P(\text{S} \vert \text{-}) = -0.6931 - 1.99243 - 1.99243 - 1.70475 - 1.99243 = -8.3751$
 	
 	So, now we see $P(\text{S} \vert \text{+}) > P(\text{S} \vert \text{-})$, therefore we label this sentence as funny. So, yes, with add-1 smoothing, the label did change.
 	

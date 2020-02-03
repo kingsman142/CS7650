@@ -7,37 +7,25 @@ Prove that $||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$. \\
 [5 pts]
 
 \begin{solution} \ \\
-	For logistic regression, we will use gradient descent to optimize the loss function, which is the negative log likelihood equation, $L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y'))$. The weight update rule is as follows: $\theta_{t+1} = \theta_{t} - \eta_t\nabla_\theta L$.
+	Let $L(\theta) = -\log(\theta)$ be the negative log-likelihood loss function for logistic regression, while $L_{\text{reg}}(\theta) = L(\theta) + R(\theta) = -\log(\theta) + ||\theta||^2_2$ is the L2 regularized version of the previous loss function ($R(\theta)$ indicates the regularization term).
 	
-	As such, we can derive the following for unregularized logistic regression:
+	Let $\hat{\theta} = \text{argmin}_\theta \thinspace\thinspace L(\theta)$.
 	
-	$L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y')) \\
-	\implies \nabla_\theta L = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))}$\\
+	Let $\theta^* = \text{argmin}_{\theta} \thinspace\thinspace L_{\text{reg}}(\theta)$.
 	
-	And for L2 regularization:
+	We know $L(\hat{\theta}) \leq L(\theta^*)$ since $\hat{\theta}$ is a global minimum for the non-regularized loss function. Conversely, we know $L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$ since $\theta^*$ is a global minimum for the regularized loss function. The only time either equality holds is if $\theta^* = \hat{\theta}$.
 	
-	$L(\theta; x_i, y_i) = -\theta f(x_i, y_i) + \log\sum_{y' \in Y} \exp(\theta f(x_i, y')) + \lambda\lvert\lvert\theta\rvert\rvert_2^2 \\
-	\implies \nabla_\theta L = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))} + 2\lambda\theta$\\
+	Since $L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$, we get the following:
 	
-	Now, the update rules, respectively, for unregularized logistic regression and L2 regularization logistic regression are below:
+	$L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$
 	
-	$\theta_{t+1}^{\text{unreg}} = \theta_{t} - \eta_t\nabla_\theta L\\
-	= \theta_t - \eta_t (-f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))})$
+	$L(\theta^*) + R(\theta^*) \leq L(\hat{\theta}) + R(\hat{\theta})$
 	
-	$\theta_{t+1}^{\text{L2}} = \theta_{t} - \eta_t\nabla_\theta L\\
-	= \theta_t - \eta_t (-f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))} + 2\lambda\theta)$\\
+	$L(\theta^*) + ||\theta^*||^2_2 \leq L(\hat{\theta}) + ||\hat{\theta}||^2_2$
 	
-	Let $L_{d\theta} = -f(x_i, y_i) + \frac{1}{\sum_{y' \in Y} f(x_i, y')\exp(\theta f(x_i, y'))}$. So, this leads to:
+	We have already shown above $L(\hat{\theta}) \leq L(\theta^*)$, so we can subtract both loss function values from the inequality and it will still hold:
 	
-	$\theta_{t+1}^{\text{unreg}} = \theta_{t} - \eta_t\nabla_\theta L\\
-	= \theta_t - \eta_t (L_{d\theta})\\
-	= \theta_t - \eta_t L_{d\theta}$
+	$||\theta^*||^2_2 \leq ||\hat{\theta}||^2_2$
 	
-	$\theta_{t+1}^{\text{L2}} = \theta_{t} - \eta_t\nabla_\theta L\\
-	= \theta_t - \eta_t (L_{d\theta} + 2\lambda\theta)\\
-	= \theta_t - \eta_t L_{d\theta} - 2\eta_t\lambda\theta$\\
-	
-	From the above equations, the difference between unregularized and L2-regularized logistic regression is in the weight update rule. Instead of just subtracting the gradient of the loss function in the weight update rule, logistic regression with L2 regularization also subtracts $2\eta\lambda\theta$. For the sake of simplicity, ignore the $\eta_tL_{d\theta}$ term for the moment, so the update rule becomes $\theta_{t+1}^{\text{L2}} = \theta_t - 2\eta_t\lambda\theta$. If $\theta > 0$, then $2\eta_t\lambda\theta$ becomes a negative value subtracted from the weights, making the weights closer to 0. On the other side, if $\theta < 0$, then $2\eta_t\lambda\theta$ is a positive value added onto the weights, making them closer to 0. This property does not exist in the unregularized logistic regression update rule. As such, since the L2-regularization weights move closer to 0, while the unregularized weights do not, their norm is going to be smaller ($||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$).
-	
-	$\therefore ||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$
+	$\therefore ||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$\\
 \end{solution}
