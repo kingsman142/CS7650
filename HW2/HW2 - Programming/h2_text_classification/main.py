@@ -84,13 +84,6 @@ def main():
 
     start_time = time.time()
     model.fit(X_train,Y_train)
-    # OLD: remove the next 6 lines before submission
-    '''most_distinct_words_probs = model.hate_speech_word_probs / model.nonhate_speech_word_probs
-    most_distinct_words = np.argsort(-most_distinct_words_probs)[-20:]
-    most_distinct_probs = [most_distinct_words_probs[id] for id in most_distinct_words]
-    new_dict = dict([[v, k] for k, v in feat_extractor.unigram.items()])
-    for index, id in enumerate(most_distinct_words):
-        print(new_dict[id], most_distinct_probs[index])'''
     print("===== Train Accuracy =====")
     accuracy(model.predict(X_train), Y_train)
 

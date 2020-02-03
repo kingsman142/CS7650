@@ -23,13 +23,15 @@ Language Modeling is the technique that allows us to compute the probabilities o
 \begin{solution} \ \\
 	a) n-gram case:
 	
-	$P(\textbf{W}) = \prod_{i=1}^{N} P(w_i | w_{i-n}^{i-1})$\\
+	$P(\textbf{W}) = \prod_{i=n}^{N} P(w_i | w_{i-n+1}^{i-1})$\\
 	
 	bi-gram case:
 	
-	$P(\textbf{W}) = \prod_{i=1}^{N} P(w_i | w_{i-1})$
+	$P(\textbf{W}) = \prod_{i=1}^{N} P(w_i | w_{i-1}) = P(w_1)P(w_2 \vert w_1)...P(w_N \vert w_{N-1})$
 	
-	Note: in the bigram model, when $i = 1$, the token at $w_{i-1}$ is the start token, which in this question is denoted as [BOS]. Similarly, in the n-gram case, the token located at $w_0$ is [BOS] as well. Honestly, this also kind of just depends on how you implement both models (i.e. instead of putting [BOS] at $w_0$, you can put it at $w_1$, which is the opposite of what I have described in the previous sentence, which means whenever you calculate the probability of [BOS], you get $P(w_1) = P(\text{[BOS]}) = 1$), but it should not make a difference in the calculations.
+	Note: in the bigram model, when $i = 1$, the token is the start token, which in this question is denoted as [BOS]. Similarly, in the n-gram case, the token located at $w_1$ is [BOS] as well.
+	
+	Note: On Piazza, the TAs clarified ``only valid n-grams'' are used in the n-gram case, so that is why the product begins at $i = n$.
 	
 	b) $\scriptsize P(S) = P(\text{I} \vert \text{[BOS]}) P(\text{like} \vert \text{I})P(\text{cheese} \vert \text{like}) P(\text{made} \vert \text{cheese}) P(\text{at} \vert \text{made}) P(\text{home} \vert \text{at}) P(\text{[EOS]} \vert \text{home})$\\
 	$= 0.75 \cdot \frac{2}{3} \cdot 0.5 \cdot 0.25 \cdot 0.33 \cdot 1 \cdot 0.33\\

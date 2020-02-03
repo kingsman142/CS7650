@@ -7,13 +7,13 @@ Prove that $||\theta^{*}||^{2}_{2} \leq ||\hat{\theta}||^{2}_{2}$. \\
 [5 pts]
 
 \begin{solution} \ \\
-	Let $L(\theta) = -\log(\theta)$ be the negative log-likelihood loss function for logistic regression, while $L_{\text{reg}}(\theta) = L(\theta) + R(\theta) = -\log(\theta) + ||\theta||^2_2$ is the L2 regularized version of the previous loss function ($R(\theta)$ indicates the regularization term).
+	Let $L(\theta) = -\log(y \vert x; \theta)$ be the negative log-likelihood loss function for logistic regression, while $L_{\text{reg}}(\theta) = L(\theta) + R(\theta) = -\log(y \vert x; \theta) + \lambda||\theta||^2_2$ is the L2 regularized version of the previous loss function ($R(\theta)$ indicates the regularization term).
 	
 	Let $\hat{\theta} = \text{argmin}_\theta \thinspace\thinspace L(\theta)$.
 	
 	Let $\theta^* = \text{argmin}_{\theta} \thinspace\thinspace L_{\text{reg}}(\theta)$.
 	
-	We know $L(\hat{\theta}) \leq L(\theta^*)$ since $\hat{\theta}$ is a global minimum for the non-regularized loss function. Conversely, we know $L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$ since $\theta^*$ is a global minimum for the regularized loss function. The only time either equality holds is if $\theta^* = \hat{\theta}$.
+	We know $L(\hat{\theta}) \leq L(\theta^*)$ since $\hat{\theta}$ is a global minimum for the non-regularized loss function. Conversely, we know $L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$ since $\theta^*$ is a global minimum for the regularized loss function.
 	
 	Since $L_{\text{reg}}(\theta^*) \leq L_\text{reg}(\hat{\theta})$, we get the following:
 	
