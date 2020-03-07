@@ -1,0 +1,147 @@
+% \begin{enumerate}
+    The Kneser-Ney smoothing method approximates the probability of an n-gram that has not been seen using the likelihood of the (n-1)-gram to occur in diverse contexts.
+    If we want to finish the sentence ``I want to go to the movie \rule{1cm}{0.15mm}'' with the word ``theatre'' but we have not observed ``theatre'' very often, then we want to make sure that we can guess ``theatre'' based on its likelihood of combining with other words. \\
+    
+    The full formula for the bigram version of Kneser-Ney smoothing follows:
+    \begin{align}
+        P(bigram) = \text{discounted bigram probability} + \text{joint unigram probability} \\
+        P(w_{i} | w_{i-1}) = \frac{max(C(w_{i-1}, w_{i}) - d, 0)}{C(w_{i-1})} + \lambda(w_{i-1})\frac{|v : C(v, w_{i}) > 0|}{\sum_{w'} |v : C(v, w') > 0|} \\
+        \lambda(w_{i-1}) = \frac{d}{\sum_{v}C(w_{i-1}, v)} * |w : C(w_{i-1}w) > 0 |
+    \end{align}
+    
+    Assume that you have collected the data in the following tables, and assume that all other observed counts are 0.
+    In the bigram table, rows represent $w_{i-1}$, columns represent $w_{i}$: e.g. $C(\text{computer}, \text{keyboard})=2$.
+    % bigram counts
+    \begin{table}[h!]
+    \centering
+    \begin{tabular}{l | r r r r}
+    $C(w_{i-1},w_{i})$  & computer & keyboard & monitor & store \\ \hline
+    computer & 0        & 2        & 4       & 4     \\
+    keyboard & 1        & 0        & 0       & 1     \\
+    monitor  & 0        & 1        & 1       & 1     \\
+    store    & 2        & 0        & 0       & 0    
+    \end{tabular}
+    \caption{Bigram frequency. Rows = $w_{i-1}$, columns = $w_{i}$.}
+    \label{tab:bigram_data}
+    \end{table}
+    % unigram counts
+    \begin{table}[h!]
+    \centering
+    \begin{tabular}{l|r}
+        computer & 10 \\
+        keyboard & 3 \\
+        monitor & 6 \\
+        store & 5 \\
+    \end{tabular}
+    \caption{Unigram frequency.}
+    \label{tab:unigram_data}
+    \end{table}
+    
+    Consider the following sentence fragment \emph{S}: ``I shopped at the computer \rule{1cm}{0.15mm}''. \\
+    You need to determine whether the sentence is more likely to end with ``computer store'' or ``computer monitor.'' \\
+    \begin{enumerate}
+        \item 
+        Compute the raw bigram probabilities for the candidate words \{\emph{store}, \emph{monitor}\} to complete the sentence \emph{S}, i.e. $P(\text{store} | \text{computer})$ and $P(\text{monitor} | \text{computer})$.
+        Is one word more likely than the other, and if so which one? [2 pts]
+        \item Compute the Kneser-Ney smoothed bigram probability of the candidate words \{\emph{store}, \emph{monitor}\} to complete the sentence.
+        Use $d=0.5$ as the discount term.
+        Is one word more likely than the other, and if so which one?
+        If the result has changed, why do you think it changed? [5 pts]
+        \item Change the discount term to $d=0.1$ and re-compute the Kneser-Ney smoothed bigram probability of the candidate words \{\emph{store}, \emph{monitor}\} to complete the sentence.
+        Is one word more likely than the other, and if so which one?
+        If the result has changed, why do you think it changed? [3 pts]
+    \end{enumerate}
+
+\begin{solution} \ \\
+\textbf{NOTE: I AM USING 2 LATE DAYS FOR THIS PROJECT.}	
+	
+a)
+
+$P(\text{store} \vert \text{computer}) = \frac{C(\text{computer}, \text{store})}{C(\text{computer})} = \frac{4}{10} = \textbf{0.4}$
+
+$P(\text{monitor} \vert \text{computer}) = \frac{C(\text{computer}, \text{monitor})}{C(\text{computer})} = \frac{4}{10} = \textbf{0.4}$
+
+\textbf{No, both words are equally likely because they have the same counts.}
+
+b)
+
+Let us calculate some constants beforehand that are useful in both calculations below:
+
+$\sum_v C(\text{computer}, v) $
+
+$= C(\text{computer}, \text{computer}) + C(\text{computer}, \text{keyboard}) + C(\text{computer}, \text{monitor}) + C(\text{computer}, \text{store}) $
+
+$= 0 + 2 + 4 + 4 $
+
+$= 10$\\
+
+$\vert w : C(\text{computer}, w) > 0\vert $
+
+$= \vert\{\text{keyboard}, \text{monitor}, \text{store}\}\vert $
+
+$= 3$\\
+
+$\sum_{w'} \vert v : C(v, w') > 0 \vert $
+
+$= \vert v : C(v, \text{computer}) > 0 \vert + C(v, \text{keyboard}) > 0 \vert + C(v, \text{monitor}) > 0 \vert + C(v, \text{store}) > 0 \vert $
+
+\small$= \vert\{\text{keyboard}, \text{store}\}\vert + \vert\{\text{computer}, \text{monitor}\}\vert + \vert\{\text{computer}, \text{monitor}\}\vert + \vert\{\text{computer}, \text{keyboard}, \text{monitor}\}\vert $
+
+\normalsize$= 2 + 2 + 2 + 3 = 9$\\
+
+Now, we can calculate the actual smoothed bigram probabilities:
+
+$P(\text{store} \vert \text{computer}) $
+
+$= \frac{\max(C(\text{computer}, \text{store}) - d, 0)}{C(\text{computer})} + \lambda(\text{computer})\frac{\vert v : C(v, \text{store}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{\max(C(\text{computer}, \text{store}) - 0.5, 0)}{C(\text{computer})} + \frac{0.5 \vert w : C(\text{computer},w) > 0 \vert}{\sum_{v}C(\text{computer}, v)}\frac{\vert v : C(v, \text{store}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{3.5}{10} + \frac{0.5(3)}{10}\frac{3}{9}$
+
+$= 0.35 + 0.05$
+
+$= \textbf{0.4}$
+
+$P(\text{monitor} \vert \text{computer}) $
+
+$= \frac{\max(C(\text{computer}, \text{monitor}) - d, 0)}{C(\text{computer})} + \lambda(\text{computer})\frac{\vert v : C(v, \text{monitor}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{\max(C(\text{computer}, \text{monitor}) - 0.5, 0)}{C(\text{computer})} + \frac{0.5 \vert w : C(\text{computer},w) > 0 \vert}{\sum_{v}C(\text{computer}, v)}\frac{\vert v : C(v, \text{monitor}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{3.5}{10} + \frac{0.5(3)}{10}\frac{2}{9}$
+
+$= 0.35 + 0.0333$
+
+$= \textbf{0.3833}$
+
+We can now see ``store'' is now more likely to appear than ``monitor''. This is because ``store'' appears in 3 bigrams compared to the 2 bigrams for ``monitor'', so it is more likely to appear in an unseen bigram in general.
+
+c)
+
+$P(\text{store} \vert \text{computer}) $
+
+$= \frac{\max(C(\text{computer}, \text{store}) - d, 0)}{C(\text{computer})} + \lambda(\text{computer})\frac{\vert v : C(v, \text{store}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{\max(C(\text{computer}, \text{store}) - 0.1, 0)}{C(\text{computer})} + \frac{0.1 \vert w : C(\text{computer},w) > 0 \vert}{\sum_{v}C(\text{computer}, v)}\frac{\vert v : C(v, \text{store}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{3.9}{10} + \frac{0.1(3)}{10}\frac{3}{9}$
+
+$= 0.39 + 0.01$
+
+$= \textbf{0.4}$
+
+$P(\text{monitor} \vert \text{computer}) $
+
+$= \frac{\max(C(\text{computer}, \text{monitor}) - d, 0)}{C(\text{computer})} + \lambda(\text{computer})\frac{\vert v : C(v, \text{monitor}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{\max(C(\text{computer}, \text{monitor}) - 0.1, 0)}{C(\text{computer})} + \frac{0.1 \vert w : C(\text{computer},w) > 0 \vert}{\sum_{v}C(\text{computer}, v)}\frac{\vert v : C(v, \text{monitor}) > 0\vert}{\sum_{w'} \vert v : C(v, w') > 0 \vert}$
+
+$= \frac{3.9}{10} + \frac{0.1(3)}{10}\frac{2}{9}$
+
+$= 0.39 + 0.0067$
+
+$= \textbf{0.3967}$
+
+As we can see, the probabilities converged significantly closer to their original probabilities of 0.4, but ``store'' still has a higher probability than ``monitor'', so nothing has changed. There was no change because the only thing that changed in the calculations was a smaller smoothing constant, $d$. As such, by making the smoothing constant smaller, the probabilities changed in the same manner as they did in part (b), just to a lesser extent.
+\end{solution}

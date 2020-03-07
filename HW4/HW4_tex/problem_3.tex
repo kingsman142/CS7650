@@ -1,0 +1,49 @@
+For the programming task, you will implement several models for part-of-speech tagging.
+We will use the LSTM as the basic architecture for the model and try several modifications to improve performance.
+To do this, you will complete the Python code started in \texttt{POS\_tagging.ipynb}, available on Canvas along with the train and test data (\texttt{train.txt} and \texttt{test.txt}) in \texttt{POS\_tagging.zip}.
+For all the written questions to Q3 (accuracy reporting and error analysis), please provide your answers in the space provided \textbf{inside the notebook}.
+
+NOTE: for each model that you test, you will produce a file \texttt{test\_labels.txt} that you can upload to Gradescope to evaluate your model's performance. 
+
+\begin{enumerate}
+    \item 
+    To begin, implement an LSTM tagger by completing the skeleton code provided in \texttt{BasicPOSTagger} in the notebook.
+    The model will use \emph{word embeddings} to represent the sequence of words in the sentence.
+    
+    For this problem, implement the forward pass and the training procedure for the tagger.
+    After training for 30 epochs, the model should achieve at least 80\% on the held-out data. 
+    
+    In addition, compute the top-10 most frequent types of errors that the model made in labeling the data in \texttt{test.txt} (e.g. if the model labeled \texttt{NN} as \texttt{VB} 10 times) and report these errors in the written answer.
+    Report the results in a table containing the top-10 mistakes, with the following columns: model tag type, ground truth tag type, error frequency, up to 5 example words that were tagged incorrectly.
+    What kinds of errors did the model make and why do you think it made them?  [5 pts]
+    \item 
+    Word-level information is useful for part-of-speech tagging, but what about character level information?
+    For instance, the present tense of English verbs is marked with the suffix \emph{-ing}, which can be captured by a sequential character model.
+    
+    For this problem, implement the character-level model by completing the skeleton code provided in \texttt{CharPOSTagger} in the notebook.
+    Unlike part (a), this model will use \emph{character} embeddings.
+    After training for 30 epochs, the model should achieve at least 80\%
+    on the held-out data.
+    
+    In addition, compare the top-10 types of errors made by the character-level model with the errors made by the word-level model from part (a) and report these errors in the written answer.
+    Report the error results in the same format as before.
+    What kinds of errors does the character-level model make as compared to the original model, and why do you think it made them? [10 pts]
+    
+    \item 
+    The previous models considered only a single direction, i.e. feeding the information from left to right (starting at word $i=1$ and ending at word $i=N$).
+    For the final model, you will implement a bidirectional LSTM that uses information from both left-to-right and right-to-left to represent dependencies between adjacent words in both directions.
+    In order to decide if the word ``call'' is \texttt{VB} or \texttt{NN}, the model can use information from the following words to disambiguate (e.g. ``call waiting'' vs. ``call him'').
+    
+    For this problem, implement the bidirectional model by completing the skeleton code provided in \texttt{BiLSTMPOSTagger} in the notebook.
+    Like the model in part (a), this will use word embeddings.
+    After training for 30 epochs, the model should achieve at least 90\% on the held-out data.
+    
+    In addition, implement \textbf{one} of the three modifications listed in the notebook to boost your score: (a) different word embeddings to initialize the model (one different type), (b) different hyperparameters to initialize the model (five different combinations), (c) different model architecture on top of the BiLSTM (one different architecture).
+    Explain in the written answer which modifications you have made, why you chose a certain modification over another (e.g. \texttt{Glove} over \texttt{word2vec}) and the resulting accuracy of the modified model.
+    
+    Lastly, compare the top-10 errors made by this modified model with the errors made by the model from part (a).
+    Report the error results in the same format as before.
+    If you tested multiple different hyperparameters, compute the errors for the model with the highest accuracy on the validation data.
+    What errors does the original model make as compared to the modified model, and why do you think it made them? [10 pts]
+    
+\end{enumerate}

@@ -1,0 +1,83 @@
+Suppose we are tagging a sentence ``They run programs" with two types of tags: N (noun) and V (verb). The initial probabilities, transition probabilities and emission probabilities computed by an HMM model are shown below.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+       & N & V  \\ \hline
+$\pi$  & 0.8   & 0.2      \\ \hline
+\end{tabular}\caption{Initial probabilities} \label{Tab:Initial}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+       & N & V  \\ \hline
+N  & 0.4   & 0.6      \\ \hline
+V  & 0.8   & 0.2      \\ \hline
+\end{tabular}\caption{Transition probabilities} \label{Tab:Trans}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+       & they & run & programs  \\ \hline
+N  & 0.6   & 0.2  &0.2      \\ \hline
+V  & 0   & 0.6  &0.4      \\ \hline
+\end{tabular}\caption{Emission probabilities} \label{Tab:Emission}
+\end{table}
+
+\begin{enumerate}
+    \item Given the HMM model above, compute the probability of the given sentence ``They run programs'' by using the Forward AND Backward Algorithm. Please show all the steps of calculations.  
+    [6 pts]
+    \item Tag the sentence  ``They run programs'' by using the Viterbi Algorithm. Please show all the steps of calculations. [4 pts]
+\end{enumerate}
+
+\begin{solution}
+a) The table for the forward algorithm is as follows (read it from left to right):
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		& they            & run                                      & programs                                          \\ \hline
+		N & 0.8(0.6) = \textbf{0.48} & \shortstack{0.48(0.4) + 0(0.8)\\= 0.192(0.2)\\= \textbf{0.0384}} & \shortstack{0.384(0.4) + 0.1728(0.8)\\= 0.1536(0.2) \\= \textbf{0.03072}}  \\ \hline
+		V & 0.2(0) = \textbf{0}      & \shortstack{0.48(0.6) + 0(0.2) \\= 0.288(0.6) \\= \textbf{0.1728}} & \shortstack{0.0384(0.6) + 0.1728(0.2) \\= 0.0576(0.4) \\= \textbf{0.02304}} \\ \hline
+	\end{tabular}
+	\caption{Forward algorithm}
+\end{table}
+
+If we sum up the values in the last, right-most column, we get the probability of the given sentence from the forward algorithm, which is 0.03072 + 0.02304 = \textbf{0.05376}.
+
+The table for the backward algorithm can be seen on the next page because it doesn't fit on this page (read it from right to left).
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		& start\_state                     & they                                    & run                                & programs \\ \hline
+		N & \shortstack{0.8(0.6)(0.112) \\= \textbf{0.05376}} & \shortstack{0.4(0.2)(0.32) \\+ 0.6(0.6)(0.24) \\= \textbf{0.112}} & \shortstack{0.4(0.2)(1) \\+ 0.6(0.4)(0.1) \\= \textbf{0.32}} & 1        \\ \hline
+		V & \shortstack{0.2(0)(0.08) \\= \textbf{0}}          & \shortstack{0.8(0.2)(0.32) \\+ 0.2(0.6)(0.24) \\= \textbf{0.08}}  & \shortstack{0.8(0.2)(1) \\+ 0.2(0.4)(1) \\= \textbf{0.24}}   & 1        \\ \hline
+	\end{tabular}
+	\caption{Backward algorithm}
+\end{table}
+
+If we sum up the values in the first, left-most column, we get the probability of the given sentence from the backward algorithm, which is 0.5376 + 0 = \textbf{0.05376}. Clearly, the forward and backward algorithm produce the same probability, which is verification they are right. 
+
+b) The table for the Viterbi algorithm can be seen below:
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		& they            & run                                                                                                                                                         & programs                                                                                                                                                               \\ \hline
+		N & 0.8(0.6) = \textbf{0.48} & \begin{tabular}[c]{@{}l@{}}N = 0.48(0.4) = 0.192\\ V = 0(0.8) = 0\\ $\implies$ max(N, V) = 0.192\\ = 0.192(0.2)\\ = \textbf{0.0384}\\ Backpointer: \textbf{N}\end{tabular} & \begin{tabular}[c]{@{}l@{}}N = 0.038(0.4) = 0.015\\ V = 0.173(0.8) = 0.138\\ $\implies$ max(N, V) = 0.138\\ = 0.138(0.2)\\ = \textbf{0.0276}\\ Backpointer: \textbf{V}\end{tabular}   \\ \hline
+		V & 0.2(0) = \textbf{0}      & \begin{tabular}[c]{@{}l@{}}N = 0.48(0.6) = 0.288\\ V = 0(0.2) = 0\\ $\implies$ max(N, V) = 0.288\\ = 0.288(0.6)\\ = \textbf{0.1728}\\ Backpointer: \textbf{N}\end{tabular} & \begin{tabular}[c]{@{}l@{}}N = 0.0384(0.6) = 0.023\\ V = 0.1728(0.2) = 0.035\\ $\implies$ max(N, V) = 0.035\\ = 0.035(0.4)\\ = \textbf{0.0138}\\ Backpointer: \textbf{V}\end{tabular} \\ \hline
+	\end{tabular}
+	\caption{Viterbi algorithm}
+\end{table}
+
+The above table not only includes probabilities for each state, along with all the necessary calculations you want to see, but also the backpointers. I could have created a separate backpointers table, and that's what you would do in practice, but honestly, that's not really important in a question like this. From the above, we want to use that table to tag the sequence. We start from the end of the sentence, which is at the right-most column (``programs''). From here, we can see the most likely tag for ``programs'' is N, because the ``N'' row has a probability 0.0276 and the ``V'' row has the probability 0.0138. We see its backpointer is V, because the V tag contributed the most to the calculation of its probability. So, we go to the next word in the sentence, ``run''. Since the backpointer for ``program'' was V, we look at ``run'', tag it as V, since ``run'' being a verb contributed the most to the probability of ``programs'' being a noun, and then we look at the backpointer of ``run'', which is ``N''. As such, we finally reach the final word, ``they'', and tag it as ``N'' since that was the backpointer. Therefore, from the above description, we have arrived at the conclusion that ``programs'' is tagged with N, ``run'' is tagged with V, and ``they'' is tagged with N. This sentence tagging produces the sequence N, V, N, or Noun, Verb, Noun. This result makes sense from an English-speaker perspective because before I did the Viterbi algorithm, I predicted it would be tagged as NVN anyway.
+\end{solution}

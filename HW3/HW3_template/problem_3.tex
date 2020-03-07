@@ -1,0 +1,132 @@
+The distributional hypothesis suggests that the more similarity there is in the meaning of two words, the more distributionally similar they are, where a word's distibution refers to the context in which it appears. This motivated the work by Mikolov et al. on the skip-gram model which is an efficient way of learning high quality dense vector representations of words from unstructured text. The objective of the skip-gram model is to learn the probability distribution $P(O|I)$ where given an inside word $w_I$, we intend to estimate the probability that an outside word $w_O$ lies in the context window of $w_I$. The basic formulation of the skip-gram model defines this using the softmax function:
+
+\begin{align}
+    P(O = w_O | I = w_I) = \frac{\exp(\bm{u_{w_O}}^T . \bm{v_{w_I}})}{\sum_{w \in \text{Vocab}} \exp(\bm{u_{w}}^T . \bm{v_{w_I}})}
+\end{align}{}
+
+Here, $\bm{u_{w_O}}$ is the word vector representing the outside word $o$ and $\bm{v_{w_I}}$ is the word vector representing the inside word $i$. To update these parameters continually during training, we store these in two matrices $\textbf{U}$ and $\textbf{V}$. The columns of $\textbf{V}$ are all of the inside word vectors $\bm{v_{w_I}}$ while the columns of $\textbf{U}$ are all the outside word vectors $\bm{u_{w_O}}$ and both these matrices contain a vector for each word in the vocabulary.
+
+\begin{enumerate}
+    \item The cross entropy loss between two probability distributions $p$ and $q$, is expressed as:
+        \begin{align}
+            CE(p, q) = - \sum_i p_i \log(q_i)
+        \end{align}
+        For, a given inside word $w_I = w_k$, if we consider the ground truth distribution $\bm{y}$ to be a one-hot vector (of length same as the size of vocabulary) with a 1 only for the true outside word $w_O$ and 0 everywhere else. The predicted distribution $\hat{\bm{y}}$ (of length same as the size of vocabulary) is the probability distribution $P(w_O | w_I = w_k)$. The $i^{th}$ entry in these vectors is the probability of the $i^{th}$ word being an outside word. Write down and simplify the expression for the cross entropy loss, $CE(\bm{y}, \hat{\bm{y}})$, for the skip-gram model described above for a single pair of words $w_O$ and $w_I$. (Note: your answer should be in terms of $P(O = w_O | I = w_I)$.) [2 pts]
+    \item Find the partial derivative of the cross entropy loss calculated in part (a) with respect to the inside word vector $\bm{v_{w_I}}$. (Note: your answer should be in terms of $\bm{y}$, $\hat{\bm{y}}$ and $\textbf{U}$.) [5 pts]
+    \item Find the partial derivative of the cross entropy loss calculated in part (a) with respect to each of the outside word vectors $\bm{u_{w_O}}$. (Note: Do this for both cases $w_O = O$ (true outside word) and $w_O \neq O$ (all other words). Your answer should be in terms of $\bm{y}$, $\hat{\bm{y}}$ and $\bm{v_{w_I}}$.) [5 pts]
+    \item Explain the idea of negative sampling and the use of the parameter $K$. Write down the loss function for this case. (Note: your answer should be in terms of $\bm{u_{w_O}}$, $\bm{v_{w_I}}$ and the parameter $K$.) [3 pts]
+\end{enumerate}
+
+
+\begin{solution} \ \\
+a)
+
+Let $k$ be the ground truth index (i.e. $y_k = 1$ and $y_{m\neq k} = 0$):
+
+$CE(p, q) $
+
+$= -\sum_i p_i\log(q_i) $
+
+$= -\sum_i y_i\log(\hat{y_i}) $
+
+$= -y_k\log(\hat{y_k}) $
+
+$= -\log(P(O = w_O \vert I = w_I))$
+
+$= -\log(P(O = w_k \vert I = w_k))$
+
+b) Let $w_I = w_k$ be the ground-truth, correctly predicted word at index k.
+
+$\frac{\delta}{\delta v_{w_I}} -\log(P(O = w_O \vert I = w_I))$
+
+$= \frac{\delta}{\delta v_{w_I}} -\log(P(O = w_k \vert I = w_k))$
+
+$= \frac{\delta}{\delta v_{w_I}} -\log(\frac{\exp(u_{w_k}^T . v_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})})$
+
+$= \frac{\delta}{\delta v_{w_I}} \big[ -\log(\exp(u_{w_k}^T . v_{w_I})) + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})) \big]$
+
+$= \frac{\delta}{\delta v_{w_I}} \big[ -u_{w_k}^T . v_{w_I} + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})) \big]$
+
+$= -u^T_{w_k} + \frac{\delta}{\delta v_{w_I}} \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I}))$
+
+$= -u^T_{w_k} + \frac{\frac{\delta}{\delta v_{w_I}} \sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})}$
+
+$= -u^T_{w_k} + \frac{\sum_{w \in \text{Vocab}} u^T_w\exp(u_{w}^T . v_{w_I})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_I})}$
+
+$= -u^T_{w_k} + \sum_{w \in \text{Vocab}} u^T_w \hat{y}_w$
+
+$= \sum_{w \in \text{Vocab}} u^T_w \hat{y}_w - u^T_{w_k}$
+
+$= \sum_{w \in \text{Vocab}} \hat{y}_w u^T_w - y_w u^T_{w}$
+
+$= \sum_{w \in \text{Vocab}} u^T_{w}(\hat{y}_w - y_w)$
+
+$= U(\hat{y} - y)$
+
+c) Let $w_I = w_k$ be the ground-truth word at index k.
+
+$\frac{\delta}{\delta u_{w_O}} -\log(P(O = w_O \vert I = w_I))$
+
+$= \frac{\delta}{\delta u_{w_O}} -\log(P(O = w_k \vert I = w_k))$
+
+$= \frac{\delta}{\delta u_{w_O}} -\log(\frac{\exp(u_{w_k}^T . v_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})})$
+
+$= \frac{\delta}{\delta u_{w_O}} \big[ -\log(\exp(u_{w_k}^T . v_{w_k})) + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})) \big]$
+
+$= \frac{\delta}{\delta u_{w_O}} \big[ -u_{w_k}^T . v_{w_k} + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})) \big]$
+
+Now, let $w_O = w_k$ (i.e. the ground-truth correctly predicted word). We get the following derivative:
+
+$\frac{\delta}{\delta u_{w_k}} \big[ -u_{w_k}^T . v_{w_k} + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})) \big]$
+
+$= -v_{w_k}^T + \frac{\delta}{\delta u_{w_k}}\log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k}))$
+
+$= -v_{w_k}^T + \frac{\frac{\delta}{\delta u_{w_k}} \sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}$
+
+$= -v_{w_k}^T + \frac{v_{w_k}^T\exp(u_{w_k}^Tv_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}$
+
+$= -v_{w_k}^T + v_{w_k}^T\hat{y}_k$
+
+$= -v_{w_k}^T + y^T\hat{y} v_{w_k}^T$
+
+$= v_{w_k}^T(y^T\hat{y} - 1)$
+
+$= v_{w_I}^T(y^T\hat{y} - 1)$
+
+Now, instead, let $w_O = w_m$ (where $m \neq k$). We get the following derivative:
+
+$\frac{\delta}{\delta u_{w_m}} \big[ -u_{w_k}^T . v_{w_k} + \log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})) \big]$
+
+$= \frac{\delta}{\delta u_{w_m}}\log(\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k}))$
+
+$= \frac{\frac{\delta}{\delta u_{w_m}} \sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}$
+
+$= \frac{\sum_{w \in (\text{Vocab}/w_k)} v_{w_k}^T\exp(u_{w}^T . v_{w_k})}{\sum_{w \in \text{Vocab}} \exp(u_{w}^T . v_{w_k})}$
+
+$= \sum_{w \in (\text{Vocab}/w_k)} v_{w_k}^T \hat{y}_w$
+
+$= v_{w_k}^T \sum_{w \in (\text{Vocab}/w_k)} \hat{y}_w$
+
+$= v_{w_k}^T \left[(1 - y)^T \hat{y} \right]$
+
+$= (1 - y)^T \hat{y} v_{w_k}^T$
+
+$= (1 - y)^T \hat{y} v_{w_I}^T$
+
+d)
+
+For a network like word2vec, stochastic gradient descent requires us to compute the probability of each word across our entire vocabulary. As such, when we do backpropagation later on in the process, and V (the size of our vocabulary) is massive (tens of thousands or hundreds of thousands of words), this process becomes computationally expensive, especially once you consider iterating over several epochs of your data. As such, negative sampling solves this problem. We will take our target word (e.g. apricot) and choose a window positive examples around our target word as positive samples (e.g. let c = 2, then choose the 2*c surrounding words = 4 total words used as positive samples) and for each positive example, you choose K negative samples (any word in our corpus that is not our target word, as described in the ``8\_word\_embedding.pdf'' slides for our class). As such, if K = 2, and in the above example we had c = 2 (leading to 4 positive samples), then we would have 4*K = 4*2 = 8 negative samples. As such, instead of performing stochastic gradient descent across our vocabulary of 100,000 words/samples, we now only perform descent across 4 positive + 8 negative = 12 samples, significantly reducing computation time.
+
+As such, the role of K is to increase the number of negative samples used for computation in our backpropagation steps. It goes in tandem with C, which is the size of our positive sample window, since C increases the number of positive samples, and K increases as the number of positive samples increases. 
+
+However, since we now using negative sampling, we can treat each word as a binary classification problem. Let $t$ be the target word, $c$ be a positive word sample, and $n$ be a negative word sample. This binary classification problem can model a probability distribution where positive samples (labeled as similarity score s = 1) are modeled as $P(s = 1 \vert c, t)$ and K negative samples (labeled as similarity score s = 0) are modeled as $P(s = 1 \vert n, t)$. We want to maximize the similarity between the positive samples and minimize similarity between negative samples. First, let us define $P(s = 1 \vert O, I) = \frac{1}{1 + \exp(-u_{w_O}^T v_{w_I})} = \sigma(u_{w_O}^T v_{w_I})$. Then, we can transform the above loss function into the following (for a single positive word sample), which is the objective function we want to maximize:
+
+$L(\theta; w, c, n)$
+
+$= \log P(s = 1 \vert w_c, w_I) + \sum_{i = 1}^{K} \log P(s = 0 \vert n_i, w_I)$
+
+$= \log \sigma(u_{w_c}^T v_{w_I}) + \sum_{i = 1}^{K} \log(1 - P(s = 1 \vert n_i, w_I))$
+
+$= \log \sigma(u_{w_c}^T v_{w_I}) + \sum_{i = 1}^{K} \log \sigma(-u_{n_i}^T v_{w_I})$
+
+\end{solution}

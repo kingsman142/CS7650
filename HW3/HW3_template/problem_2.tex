@@ -1,0 +1,73 @@
+Consider we have a term-document matrix for four words in three documents shown in Table~\ref{Tab:term_doc}. The whole document set has $N = 20$ documents, and for each of the four words, the document frequency $df_t$ is shown in Table~\ref{Tab:doc_freq}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+term-document       & Doc1 & Doc2 & Doc3 \\ \hline
+car       & 27   & 4    & 24   \\ \hline
+insurance & 3    & 18   & 0    \\ \hline
+auto      & 0    & 33   & 29   \\ \hline
+best      & 14   & 0    & 17   \\ \hline
+\end{tabular}\caption{Term-document Matrix} \label{Tab:term_doc}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+          & $df$ \\ \hline
+car       & 12 \\ \hline
+insurance & 6  \\ \hline
+auto      & 10 \\ \hline
+best      & 16 \\ \hline
+\end{tabular} \caption{Document Frequency} \label{Tab:doc_freq}
+\end{table}
+
+\begin{enumerate}
+    \item Compute the \textit{tf-idf} weights for each word car, auto,
+insurance and best in Doc1, Doc2, and Doc3.  [6 pts]
+    \item Use the \textit{tf-idf} weight you get from (a) to represent each document with a vector and calculate the cosine similarities between these three documents. [4 pts]
+\end{enumerate}
+
+\begin{solution} \ \\
+a) 
+
+tfidf(car, Doc1) = $\text{tf}(\text{car})\text{idf}(\text{car}) = \log(27 + 1)\log(\frac{20}{12}) = 1.447(0.2218) = 0.3211$
+
+tfidf(car, Doc2) = $\text{tf}(\text{car})\text{idf}(\text{car}) = \log(4 + 1)\log(\frac{20}{12}) = 0.6990(0.2218) = 0.1551$
+
+tfidf(car, Doc3) = $\text{tf}(\text{car})\text{idf}(\text{car}) = \log(24 + 1)\log(\frac{20}{12}) = 1.3979(0.2218) = 0.3101$
+
+\small tfidf(insurance, Doc1) = $\text{tf}(\text{insurance})\text{idf}(\text{insurance}) = \log(3 + 1)\log(\frac{20}{6}) = 0.6021(0.5229) = 0.3148$
+
+\small tfidf(insurance, Doc2) = $\text{tf}(\text{insurance})\text{idf}(\text{insurance}) = \log(18 + 1)\log(\frac{20}{6}) = 1.2788(0.5229) = 0.6686$
+
+\small tfidf(insurance, Doc3) = $\text{tf}(\text{insurance})\text{idf}(\text{insurance}) = \log(0 + 1)\log(\frac{20}{6}) = 0(0.5229) = 0$
+
+\normalsize tfidf(auto, Doc1) = $\text{tf}(\text{auto})\text{idf}(\text{auto}) = \log(0 + 1)\log(\frac{20}{10}) = 0(0.3010) = 0$
+
+tfidf(auto, Doc2) = $\text{tf}(\text{auto})\text{idf}(\text{auto}) = \log(33 + 1)\log(\frac{20}{10}) = 1.5315(0.3010) = 0.4610$
+
+tfidf(auto, Doc3) = $\text{tf}(\text{auto})\text{idf}(\text{auto}) = \log(29 + 1)\log(\frac{20}{10}) = 1.4771(0.3010) = 0.4447$
+
+tfidf(best, Doc1) = $\text{tf}(\text{best})\text{idf}(\text{best}) = \log(14 + 1)\log(\frac{20}{16}) = 1.1761(0.0969) = 0.1140$
+
+tfidf(best, Doc2) = $\text{tf}(\text{best})\text{idf}(\text{best}) = \log(0 + 1)\log(\frac{20}{16}) = 0(0.0969) = 0$
+
+tfidf(best, Doc3) = $\text{tf}(\text{best})\text{idf}(\text{best}) = \log(17 + 1)\log(\frac{20}{16}) = 1.2553(0.0969) = 0.1216$
+
+b)
+
+$v_{\text{doc1}} = [0.3211, 0.3148, 0, 0.1140]$
+
+$v_{\text{doc2}} = [0.1551, 0.6686, 0.4610, 0]$
+
+$v_{\text{doc3}} = [0.3101, 0, 0.4447, 0.1216]$
+
+$\text{sim}(v_{\text{doc1}}, v_{\text{doc2}}) = \frac{v_{\text{doc1}}^Tv_{\text{doc2}}}{\vert\vert v_{\text{doc1}} \vert\vert\vert\vert v_{\text{doc2}} \vert\vert} = \frac{0.2603}{0.4639(0.8268)} = 0.6786$
+
+$\text{sim}(v_{\text{doc1}}, v_{\text{doc3}}) = \frac{v_{\text{doc1}}^Tv_{\text{doc3}}}{\vert\vert v_{\text{doc1}} \vert\vert\vert\vert v_{\text{doc3}} \vert\vert} = \frac{0.1134}{0.4639(0.5556)} = 0.4401$
+
+$\text{sim}(v_{\text{doc2}}, v_{\text{doc3}}) = \frac{v_{\text{doc2}}^Tv_{\text{doc3}}}{\vert\vert v_{\text{doc2}} \vert\vert\vert\vert v_{\text{doc3}} \vert\vert} = \frac{0.2531}{0.8268(0.5556)} = 0.5509$
+\end{solution}

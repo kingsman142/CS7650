@@ -1,0 +1,46 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{accents}
+\usepackage{url}
+\usepackage{bm}
+\usepackage[colorlinks]{hyperref}
+\usepackage{changepage}
+\usepackage{booktabs}
+\usepackage[none]{hyphenat}
+\pagestyle{fancy}
+\setlength{\headheight}{40pt}
+
+
+\newenvironment{solution}
+  {\renewcommand\qedsymbol{$\blacksquare$}
+  \begin{proof}[Solution]}
+  {\end{proof}}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\begin{document}
+
+\lhead{Homework 4: Structured prediction \\ \textbf{Deadline: Mar $4^{\text{th}}$, 3:00pm} }
+\rhead{CS 4650/7650 \\ Natural Language Understanding} 
+\cfoot{\thepage\ of \pageref{LastPage}}
+
+\input{instructions}
+
+\pagebreak
+
+ \begin{enumerate}
+   \item \input{problem_1}
+   \item \input{problem_2}
+   \pagebreak
+   \item \input{problem_3}
+ \end{enumerate}
+
+\end{document}

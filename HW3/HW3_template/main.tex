@@ -1,0 +1,61 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{accents}
+\usepackage{url}
+\usepackage{bm}
+\usepackage[colorlinks]{hyperref}
+\usepackage{changepage}
+\usepackage{booktabs}
+\usepackage[none]{hyphenat}
+\pagestyle{fancy}
+\setlength{\headheight}{40pt}
+
+
+\newenvironment{solution}
+  {\renewcommand\qedsymbol{$\blacksquare$}
+  \begin{proof}[Solution]}
+  {\end{proof}}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\begin{document}
+
+\lhead{Homework 3: Language modeling \\ \textbf{Deadline: Feb 17th, 3:00pm} }
+\rhead{CS 4650/7650 \\ Natural Language Understanding} 
+\cfoot{\thepage\ of \pageref{LastPage}}
+
+\textbf{Instructions}
+\begin{enumerate}
+
+    \item This homework has two parts: Q1, Q2 and Q3 are written questions and Q4 is a programming assignment with some parts requiring a written answer. Each part needs to be submitted as follows:
+    \begin{itemize}
+        \item Submit the answers to the written questions as a \texttt{pdf} file on Canvas for the assignment corresponding to Homework 3 Written. This should consist answers to Q1, Q2, Q3 and the descriptive answers from Q4. Name the pdf file as- \texttt{LastName\_FirstName.pdf}.  We recommend students type answers with LaTeX or word processors for this part. A scanned handwritten copy would also be accepted, try to be clear as much as possible. No credit may be given to unreadable handwriting. 
+        \item The programming assignment requires you to work on boilerplate code. Submit the code to the programming assignment in a zip that contain \texttt{ngram.ipynb}, \texttt{rnn.ipynb} \texttt{hw3\_skeleton\_char.py} and \texttt{hw3\_skeleton\_word.py}. This submission is to be made on Canvas for the assignment corresponding to Homework 3 Programming. Name the zip file as- \texttt{LastName\_FirstName.zip}.
+        
+        \item You first need to join this course on Gradescope. Please use your actual name as Gradescope username. Entry Code for CS 4650 is \texttt{9P32V6}. Entry Code for CS 7650 is \texttt{97ZWYV}. You should also submit a zip file to Gradescope hw3 Language Models. This file should contain \texttt{hw3\_skeleton\_char.py} and \texttt{hw3\_skeleton\_word.py}. You can see your score for 4 (a) as soon as you submit it.
+    \end{itemize}
+
+    \item For the written questions, write out all steps required to find the solutions so that partial credit may be awarded.
+    \item We generally encourage collaboration with other students. You may discuss the questions and potential directions for solving them with another student. However, you need to write your own solutions and code separately, and not as a group activity. Please list the students you collaborated with.
+    \item The code files needed to complete the homework are included in a zip file on Canvas.
+\end{enumerate}
+
+\pagebreak
+
+ \begin{enumerate}
+   \item \input{problem_1} % language modeling written
+   \item \input{problem_2} % word embedding written => Jiaao
+   \pagebreak
+   \item \input{problem_3} % word embedding written
+   \item \input{problem_4} % language model programming => Jingfeng
+ \end{enumerate}
+
+\end{document}
